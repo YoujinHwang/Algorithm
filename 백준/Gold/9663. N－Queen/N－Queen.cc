@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-int arr[15][15];
 bool isHere[15];
 
 int N;
