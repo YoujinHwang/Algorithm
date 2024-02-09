@@ -13,10 +13,10 @@ void place(int k) {
 		return;
 	}
 	for (int j = 0; j < N; j++) {
-		if (!isHere[j] && !diag1[k + j] && !diag2[k - j + N - 1]) {
-			isHere[j] = diag1[k + j] = diag2[k - j + N - 1] = true;
+		if (!isHere[j] && !diag1[k + j] && !diag2[k - j + N ]) {
+			isHere[j] = diag1[k + j] = diag2[k - j + N ] = true;
 			place(k + 1);
-			isHere[j] = diag1[k + j] = diag2[k - j + N - 1] = false;
+			isHere[j] = diag1[k + j] = diag2[k - j + N ] = false;
 		}
 	}
 }
