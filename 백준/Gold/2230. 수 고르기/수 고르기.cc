@@ -10,13 +10,16 @@ int main() {
 	cin >> n >> m;
 	for (int i = 0; i < n; i++) cin >> a[i];
 	sort(a, a + n);
+	int st=0, en = 0;
 	int ans = INT_MAX;
-	for (int i = 0; i < n-1; i++) {
-		auto it = lower_bound(a, a + n, a[i] + m);
-		if(it!=a+n)
-			ans = min(ans, *it-a[i]);
+	while (en < n) {
+		int dif = a[en] - a[st];
+		if (dif >= m) {
+			ans = min(ans, dif);
+			st++;
+		}
+		else en++;
 	}
 	cout << ans << '\n';
-	
-	
+
 }
