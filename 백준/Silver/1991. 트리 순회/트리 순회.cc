@@ -1,11 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
-vector<int> ve[100001];
 queue<int> q;
-//int p[100001];
 char lc[27];
 char rc[27];
-char p[27];
+
 void preorder(char i) {
     int num=i-'A'+1;
     cout<<i;
@@ -48,14 +46,7 @@ int main() {
         int numpa=pa-'A'+1;
         lc[numpa]=u;
         rc[numpa]=v;
-        if(u!='.') {
-            int numu=u-'A'+1;
-            p[numu]=pa;
-        }
-        if(v!='.') {
-            int numv=v-'A'+1;
-            p[numv]=pa;
-        }  
+         
     }
     preorder('A');
     cout<<'\n';
