@@ -1,0 +1,11 @@
+-- 코드를 입력하세요
+SELECT APNT_NO, PT_NAME, a.PT_NO, b.MCDP_CD,DR_NAME,APNT_YMD
+FROM PATIENT a
+join APPOINTMENT c
+on a.pt_no=c.pt_no
+join DOCTOR b
+on c.MDDR_ID=b.DR_ID
+WHERE APNT_CNCL_YN='N'
+and APNT_YMD like '2022-04-13%'
+and c.MCDP_CD='CS'
+ORDER BY 6;
