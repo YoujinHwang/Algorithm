@@ -19,9 +19,6 @@ long long solution(int r1, int r2) {
         c1+=y*2+1;
     }
     
-    // int tmp=c2-c1;
-    // answer=tmp*2;
-    // answer+=(r2-r1+1)*2;
     answer=c2-c1;
     return answer;
 }
