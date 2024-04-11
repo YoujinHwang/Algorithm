@@ -32,7 +32,7 @@ int bfs(vector<string> board) {
                     if(vis[nx][ny]==-1) {
                         q.push({nx,ny});
                         vis[nx][ny]=vis[cur.X][cur.Y]+1;
-                        if(board[nx][ny]=='G') return vis[nx][ny];
+                        if(board[nx][ny]=='G') return vis[nx][ny]; //이 조건문의 위치가 고민됐음. q.pop() 할 때 찾는게 나을지..등
                     }
                     break;
                 } 
