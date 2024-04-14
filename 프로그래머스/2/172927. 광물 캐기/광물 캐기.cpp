@@ -75,10 +75,11 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <climits>
 
 using namespace std;
 
-int answer = INT32_MAX;
+int answer = INT_MAX;
 
 int cnt_tired(int cnt, int idx, vector<int> mine)
 {
