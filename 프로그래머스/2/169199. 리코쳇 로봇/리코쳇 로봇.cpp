@@ -55,14 +55,11 @@ int solution(vector<string> board) {
             else if(board[i][j]=='G') goal={i,j};
         }
     }
-//     for(int i=0;i<n;i++) {
-//         for(int j=0;j<m;j++) {
-//             vis[i][j]=-1;
-         
-//         }
-//     }
     for(int i=0;i<n;i++) {
-        fill(vis[i],vis[i]+m,-1);
+        for(int j=0;j<m;j++) {
+            vis[i][j]=-1;
+         
+        }
     }
     answer=bfs(board);
     
