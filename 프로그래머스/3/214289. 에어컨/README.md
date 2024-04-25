@@ -1,6 +1,6 @@
 # [level 3] 에어컨 - 214289 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/214289#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/214289) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 04월 25일 21:27:05
+2024년 04월 25일 21:27:30
 
 ### 문제 설명
 
