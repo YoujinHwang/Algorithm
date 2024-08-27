@@ -1,262 +1,136 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <queue>
+#include <cstring>
+#include <climits>
 using namespace std;
-//int t_1, t_2,t_3,t_4;
-int n, m;
-//int max_1, max_2;
-int arr2[8][8];
+int N,M;
 int arr[8][8];
-//int cctv[6];
+int arr2[8][8];
 
-vector<pair <int, int>> cctv;
 
+struct Cctv{
+    int num;
+    int y,x;
+};
+vector<Cctv> cctv;
+int vis[8];
+int Size;
+int Min=INT_MAX;
+
+
+//0 : 위, 1: 오, 2:아래, 3: 왼
+int dy[4]={-1,0,1,0};
+int dx[]={0,1,0,-1};
+
+void chk(int in, int y,int x) { // in 방향에 따라 벽 만날때까지 #표시
+    if(arr2[y][x]==6) {
+        return;
+    }
+    if(arr2[y][x]==0) arr2[y][x]=-1;
+    int ny=y+dy[in];
+    int nx=x+dx[in];
+    if(ny<0||ny>=N||nx<0||nx>=M) return;
+    chk(in,ny,nx);
+}
+void dir(int dd[4],Cctv c) { //해당 방향별로 chk 함수 호출
+    for(int i=0;i<4;i++) {
+        if(dd[i]) {
+            chk(i, c.y,c.x);
+        }
+    }
+}
+void seek() { //cctv 번호별로 해당 하는 방향에만 dd 배열에서 1로 할당
+    for(int i=0;i<Size;i++) {
+        int n=cctv[i].num;
+        int dd[4]={0};
+        if(n==1) {
+            
+            dd[vis[i]]=1;
+            dir(dd, cctv[i]);
+        }
+        else if(n==3) {
+            dd[vis[i]]=1;
+            int nxt=(vis[i]+1)%4;
+            dd[nxt]=1;
+            dir(dd,cctv[i]);
+        }
+        
+        else if(n==4) {
+            memset(dd,1,sizeof(dd));
+            dd[vis[i]]=0;
+            dir(dd,cctv[i]);
+        }
+        else if(n==2) {
+            dd[vis[i]]=1;
+            dd[vis[i]+2]=1;
+            dir(dd,cctv[i]);
+        }
+        else if(n==5) {
+            memset(dd,1,sizeof(dd));
+            dir(dd,cctv[i]);
+        }
+    }
+}
+
+int count() {
+    int cnt=0;
+    for(int i=0;i<N;i++) {
+        for(int j=0;j<M;j++) {
+            if(arr2[i][j]==0) cnt++;
+        }
+    }
+    return cnt;
+}
+
+void dfs(int cnt) {
+    if(cnt==Size) {
+   
+        seek();
+        Min=min(Min,count());
+        for(int i=0;i<N;i++) { //초기화 꼭 해줘야함!! 매번 새로운 지도에서 다시 시작해야하므로! 
+            for(int j=0;j<M;j++) {
+                arr2[i][j]=arr[i][j];
+            }
+        
+        }
+        return;
+    }
+    if(cctv[cnt].num==5) {
+        vis[cnt]=1;
+        dfs(cnt+1);
+    } 
+    else if(cctv[cnt].num==2) {
+        for(int i=0;i<2;i++) {
+            vis[cnt]=i;
+            dfs(cnt+1);
+
+        }
+    }
+    else {
+        for(int i=0;i<4;i++) {
+            vis[cnt]=i;
+            dfs(cnt+1);
+
+        }
+    }
+    
+}
 
 int main() {
-	int cnt = 0; //cctv 개수
-	
-	cin >> n >> m;
-	//cin.ignore();
-	int num;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			cin >> num; //입력 받는 부분은 한 번만 실행되어야 함. 즉, 입력받아서 할당한 배열을 복사해서 다른 배열에 한번 더 저장하고, 복사한 배열을 수정하고 반복 초기화해야함.
-			arr2[i][j] = num;              
-			if (num != 6 && num != 0) {
-				//cnt++; 일일이 해줄 필요 없음. cctv.size()로 하면 됨
-				cctv.push_back({ i,j });
-			}
-		}
-	}
-	
-	cnt = cctv.size(); 
-	long long c_num = pow(4, cnt);
-	int min_total = 64;
-
-	for (long long i = 0; i < c_num; i++) {
-		int total = 0;
-		long long temp = i;
-
-		for (int q = 0; q < n; q++) { //매번 초기화를 해주는거 잊지말기!! 새로운 경우로 될때마다 초기화 다시 해줘야함(처음에 한번만 해줘서 틀림)
-			for (int w = 0; w < m; w++) {
-				arr[q][w] = arr2[q][w];
-			}
-		}
-
-		for (int j = 0; j < cnt; j++) {
-			int dir = temp % 4;
-			temp /= 4;
-			int x = cctv[j].first;
-			int y = cctv[j].second;
-			if (arr2[x][y]==1) {
-				if (dir == 0) {//왼쪽
-					for (int z = y - 1; z >= 0; z--) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue; //이거 빠트림. cctv인 경우 -1로 할당하면 안됨. 해당 cctv 차례에서 cctv 종류 판별 불가
-						arr[x][z] = -1;
-					}
-				}
-				else if (dir == 1) {//오른쪽
-					for (int z = y+1; z<m; z++) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-				}
-				else if (dir == 2) { //위쪽
-					for (int z = x-1; z >=0; z--) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-				else {//아래쪽
-					for (int z = x+1; z < n; z++) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-			}
-			else if (arr2[x][y] == 2) {
-				if (dir == 0||dir==1) {//왼쪽, 오른쪽
-					for (int z = y - 1; z >= 0; z--) { 
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = y + 1; z < m; z++) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-				}
-				else { //위쪽, 아래쪽
-					for (int z = x - 1; z >= 0; z--) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-					for (int z = x + 1; z < n; z++) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-			}
-			else if (arr2[x][y] == 3) {
-				if (dir == 0) { //왼쪽, 위쪽
-					for (int z = y - 1; z >= 0; z--) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = x - 1; z >= 0; z--) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-				else if (dir == 1) { //오른쪽, 위쪽
-					for (int z = y + 1; z < m; z++) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = x - 1; z >= 0; z--) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-				else if (dir == 2) { //왼쪽, 아래쪽
-					for (int z = y - 1; z >= 0; z--) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = x + 1; z < n; z++) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-				else { //오른쪽, 아래쪽
-					for (int z = y + 1; z < m; z++) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = x + 1; z < n; z++) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-			}
-			else if (arr2[x][y] == 4) {
-				if (dir == 0) { //왼쪽, 위쪽,오른쪽
-					for (int z = y - 1; z >= 0; z--) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = x - 1; z >= 0; z--) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-					for (int z = y + 1; z < m; z++) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-				}
-				else if (dir == 1) { //오른쪽, 위쪽,아래쪽
-					for (int z = y + 1; z < m; z++) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = x - 1; z >= 0; z--) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-					for (int z = x + 1; z < n; z++) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-				else if (dir == 2) { //왼쪽, 아래쪽, 오른쪽
-					for (int z = y - 1; z >= 0; z--) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = x + 1; z < n; z++) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-					for (int z = y + 1; z < m; z++) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-				}
-				else { //왼쪽, 아래쪽, 위쪽
-					for (int z = y - 1; z >= 0; z--) {
-						if (arr[x][z] == 6) break;
-						if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-						arr[x][z] = -1;
-					}
-					for (int z = x + 1; z < n; z++) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-					for (int z = x - 1; z >= 0; z--) {
-						if (arr[z][y] == 6) break;
-						if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-						arr[z][y] = -1;
-					}
-				}
-			}
-			else if (arr2[x][y] == 5) { //왼쪽, 위쪽,오른쪽, 아래쪽
-				
-				for (int z = y - 1; z >= 0; z--) {
-					if (arr[x][z] == 6) break;
-					if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-					arr[x][z] = -1;
-				}
-				for (int z = x - 1; z >= 0; z--) {
-					if (arr[z][y] == 6) break;
-					if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-					arr[z][y] = -1;
-				}
-				for (int z = y + 1; z < m; z++) {
-					if (arr[x][z] == 6) break;
-					if (arr[x][z] != 6 && arr[x][z] != 0) continue;
-					arr[x][z] = -1;
-				}
-				for (int z = x + 1; z < n; z++) {
-					if (arr[z][y] == 6) break;
-					if (arr[z][y] != 6 && arr[z][y] != 0) continue;
-					arr[z][y] = -1;
-				}
-			}
-
-		}
-		for (int r = 0; r < n; r++) {
-			for (int d = 0; d < m; d++) {
-				if (arr[r][d] == 0)
-					total++;
-			}
-		}
-		
-		min_total = min(total, min_total);
-	}
-	cout << min_total << '\n';
-	return 0;
-
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cin>>N>>M;
+    for(int i=0;i<N;i++) {
+        for(int j=0;j<M;j++) {
+            cin>>arr[i][j];
+            if(arr[i][j]>=1&&arr[i][j]<=5) {
+                cctv.push_back({arr[i][j],i,j});
+            }
+            arr2[i][j]=arr[i][j];
+        }
+    }
+    Size=cctv.size();
+    dfs(0);
+   
+    cout<<Min;
 }
