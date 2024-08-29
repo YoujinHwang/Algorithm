@@ -20,14 +20,16 @@ int main() {
     vector<string> numbers; // 모든 문자열을 저장할 벡터
     
     // 입력 처리
+    bool isPos=false;
     for (int i = 0; i < N; i++) {
         string str;
         cin >> str;
         numbers.push_back(str); // 모든 문자열을 하나의 벡터에 저장
+        if(str!="0") isPos=true;
     }
     
     // 모든 문자열이 "0"인 경우 예외 처리
-    if (all_of(numbers.begin(), numbers.end(), [](const string &s) { return s == "0"; })) {
+   if (!isPos) {
         cout << 0;
         return 0;
     }
