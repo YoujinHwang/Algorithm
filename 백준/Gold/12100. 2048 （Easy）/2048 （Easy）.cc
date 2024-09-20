@@ -137,10 +137,9 @@ void func(int cnt, int arr2[][20]) {
 		order[cnt] = i;
 		int tmpArr[20][20];
 		copy(&arr2[0][0], &arr2[0][0] + 20 * 20, &tmpArr[0][0]); //이거 안해줘서 틀림!!! 
-		move(i, arr2);
-		func(cnt + 1, arr2);
-		copy(&tmpArr[0][0], &tmpArr[0][0] + 20 * 20, &arr2[0][0]); //꼭 복구해줘야함. 안그럼 변형된 상태 누적..!!!!
-
+		move(i, tmpArr);
+		func(cnt + 1, tmpArr);
+		
 	}
 
 }
