@@ -19,6 +19,4 @@ end BONUS
 from hr_employees a
 join CTE b
 on a.emp_no=b.emp_no
-join hr_department c
-on a.dept_id=c.dept_id
 order by 1
