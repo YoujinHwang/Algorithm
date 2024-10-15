@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 3176 KB, 시간: 4 ms
+메모리: 2060 KB, 시간: 0 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 10월 15일 17:05:05
+2024년 10월 15일 17:24:08
 
 ### 문제 설명
 
@@ -88,7 +88,7 @@
 
 <p><그림 1>은 맨 처음에 모든 상어가 자신의 냄새를 뿌린 상태를 나타내며, <표 1>에는 각 상어 및 현재 방향에 따른 우선순위가 표시되어 있다. 이 예제에서는 k = 4이다. 왼쪽 하단에 적힌 정수는 냄새를 의미하고, 그 값은 사라지기까지 남은 시간이다. 좌측 상단에 적힌 정수는 상어의 번호 또는 냄새를 뿌린 상어의 번호를 의미한다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/b2d80580-57ba-419b-9d16-bc7fbe49512b/-/preview/" style="width: 900px; height: 352px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 900px; height: 352px;"></p>
 
 <p style="text-align: center;"><그림 2></p>
 

@@ -6,8 +6,6 @@ int N, M, k;
 struct Shark {
 	pair<int, int> pos;
 	int dir;
-	//int cnt;
-
 };
 struct Node {
 	int num;//상어 
@@ -18,7 +16,6 @@ int dead[401];
 #define Y first
 #define X second
 
-deque<Shark> dq[401]; //상어가 지나간 자리 위치, 남은 시간
 Shark cur[401];//상어 현재 위치,방향
 int dy[] = {0,-1,1,0,0 }; //위 아래 왼 오
 int dx[] = { 0,0,0,-1,1 };
@@ -41,7 +38,6 @@ void sharkMove(Node map[][20]) {
 			if (ny < 0 || ny >= N || nx < 0 || nx >= N) continue;
 			if (arr[ny][nx].cnt == 0) { //냄새 없는 칸 있으면 바로 우선 순위 가장 높은 곳으로 이동
 				cur[i] = { {ny,nx},order[i][dir][ind] }; 
-				dq[i].push_back({ {ny,nx},k });
 				if (map[ny][nx].num != 0) { //옮긴 자리에 상어 있으면 죽음
 					//cout << ny << ' ' << nx << ' ' << i << "죽음\n";
 					dead[i] = 1;
@@ -63,7 +59,6 @@ void sharkMove(Node map[][20]) {
 				if (ny < 0 || ny >= N || nx < 0 || nx >= N) continue;
 				if (arr[ny][nx].num != i) continue;
 				cur[i] = { {ny,nx},order[i][dir][ind] };
-				dq[i].push_back({ {ny,nx},k });
 				map[ny][nx] = { i,k };
 				break;
 			}
@@ -100,7 +95,6 @@ int main() {
 			cin >> arr[i][j].num;
 			arr[i][j].cnt = 0;
 			if (arr[i][j].num > 0) {
-				dq[arr[i][j].num].push_back({ { i,j }, k });
 				cur[arr[i][j].num] = { {i,j},0 };
 				arr[i][j].cnt = k;
 				
